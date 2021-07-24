@@ -1,0 +1,15 @@
+# Directories
+__pycache__/
+.git/
+.vscode/
+
+# File wildcards
+*.log
+*.swp
+
+# Single file
+workspace.code-workspace
+
+# For gunicorn log
+gunicorn-daily-log*
+gunicorn-access.log*
