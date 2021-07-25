@@ -1,4 +1,7 @@
-# Parameter settings
+##############################
+## Start parameter settings ##
+##############################
+
 # All the following paramters can be overwritten by exporting
 # environment variables with the same name
 
@@ -14,19 +17,14 @@ GUNICORN_LOG_PATH ?= logs/gunicorn-daily-log
 GUNICORN_ACCESS_LOG_FILE ?= logs/gunicorn-access.log
 GUNICORN_SERVE_URL ?= 127.0.0.1:8001  # Change to 0.0.0.0:8001 to serve requests from anywhere.
 
-
 # RabbitMQ (the default broker type) parameters
 RABBIT_NAME ?= bonny
 RABBIT_PWD ?= love-carrot
 
-###############################
-## End of parameter settings ##
-###############################
 
 ###############################
 ## Post-configure parameters ##
 ###############################
-
 
 # Check if current user is root.
 ifneq ($(shell id -u), 0)
@@ -60,6 +58,7 @@ endif
 ## Executable targets ##
 ########################
 
+# Shortcut targets
 init: install register-rabbit
 start: start-rabbit start-celery start-gunicorn
 restart: stop-celery start-celery start-gunicorn
