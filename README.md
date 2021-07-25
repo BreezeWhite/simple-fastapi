@@ -2,7 +2,7 @@
 
 A simple, minimum, ready-to-go FastAPI template that could be setup in just a few minutes. Coordinates with Celery for distributed workload in the backend. Suitable for heavy computational scenarios such as machine learning, image processing, audio processing, etc.
 
-It's easy to extend and implement more tasks. Just add tasks in `src/celery_server.py` and also the corresponding endpoints to `src/server.py`, then it's all done. No additional configurations are required.
+It's easy to extend and implement more tasks. Just add tasks to `src/celery_server.py` and also the corresponding endpoints to `src/server.py`, then it's all done. No additional configurations are required.
 
 # Quick start
 ``` bash
@@ -15,7 +15,7 @@ make install
 # Start serving
 make start
 ```
-You can access and test the API from the browser. Just enter `http://127.0.0.1:8001/docs`.
+You can play around the API from the browser by going to `http://127.0.0.1:8001/docs`.
 
 
 ## Docker
@@ -56,7 +56,7 @@ Request --> Endpoint --> Broker ---> Worker (Machine 2)
 To do this, first launch the endpoint server and broker service on the same machine:
 ```bash
 # It's neccessary to have a account registered to RabbitMQ for Celery to
-# login when Celery is running on a different machine.
+# login from a different machine.
 export RABBIT_NAME=bonny
 export RABBIT_PWD=love-carrot
 make register-rabbit
