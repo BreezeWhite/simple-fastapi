@@ -1,4 +1,5 @@
 import time
+import math
 
 from celery import Celery
 from celery.utils.log import get_task_logger
@@ -10,6 +11,10 @@ app.config_from_object('src.celery_config')
 logger = get_task_logger(__name__)
 
 
+################################
+## Define your own tasks here ##
+################################
+
 @app.task
 def health_check():
     return "I'm fine, thank you, and you?"
@@ -20,6 +25,24 @@ def add(a, b):
     time.sleep(15)
     return a + b
 
+
+@app.task
+def is_prime(num: int) -> bool:
+    if num <= 1:
+        return False
+    if num == 2:
+        return True
+
+    scan_range = math.ceil(pow(num, 0.5)) + 1
+    for div in range(2, scan_range):
+        if num % div == 0:
+            return False
+    return True
+
+
+#####################
+## Other utilities ##
+#####################
 
 @task_prerun.connect
 def prerun_handler(task_id, task, **kwargs):
