@@ -10,7 +10,7 @@ It's easy to extend and implement more tasks. Just add tasks in `src/celery_serv
 git clone https://github.com/BreezeWhite/simple-fastapi.git
 
 # Install dependencies
-make init
+make install
 
 # Start serving
 make start
@@ -35,4 +35,50 @@ docker run -it --rm \
 ```
 
 ## Advanced
-To be continued...
+
+### Distributed workload
+
+Usually, the picture looks like this:
+```
+Request --> Endpoint --(register task)--> Broker --(dispatch task)--> Worker
+            <FastAPI>                   <RabbitMQ>                   <Celery>
+```
+All three serivces run on a single machine.
+
+But with Celery, you can deploy multiple workers accross different machines to increase the computation power.
+```
+                          ------> Worker (Machine 1)
+                          |
+Request --> Endpoint --> Broker ---> Worker (Machine 2)
+                          |
+                          ------> worker (Machine 3)
+```
+To do this, first launch the endpoint server and broker service on the same machine:
+```bash
+# It's neccessary to have a account registered to RabbitMQ for Celery to
+# login when Celery is running on a different machine.
+export RABBIT_NAME=bonny
+export RABBIT_PWD=love-carrot
+make register-rabbit
+
+# (Optional) To make the endpoint available from anywhere, change the binding IP as following.
+export GUNICORN_SERVE_URL=0.0.0.0:8001
+
+# Start the endpoint server
+make start-gunicorn
+```
+After launching the above services, you can now launch the Celery on different machines
+and all connect to the same broker.
+```bash
+# Fill in the account information you've just setup.
+export CELERY_BROKER_HOST=<ip address of the broker>
+export CELERY_BROKER_USER=bonny
+export CELERY_BROKER_PASSWORD=love-carrot
+
+# To run in foreground
+make start-celery-stdout
+
+# To run in background
+make start-celery
+```
+Congratulations! You've just finished setup an distributed backend services!
